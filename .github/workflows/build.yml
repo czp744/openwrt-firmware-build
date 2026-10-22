@@ -1,0 +1,44 @@
+name: Build OpenWrt x86-64 UEFI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: openwrt-x86-64-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Install build tools in ephemeral GitHub runner
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y build-essential libncurses-dev zlib1g-dev gawk gettext libssl-dev xsltproc rsync wget curl zstd file unzip python3 qemu-utils squashfs-tools mtools gdisk
+      - name: Download, verify, resolve, build and inspect
+        run: bash scripts/build.sh
+      - name: Upload verified firmware
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: openwrt-25.12.6-x86-64-uefi
+          path: output/firmware/
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+      - name: Upload logs and provenance
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: openwrt-build-records
+          path: output/records/
+          if-no-files-found: warn
+          retention-days: 7
+

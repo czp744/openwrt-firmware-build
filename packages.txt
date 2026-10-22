@@ -1,0 +1,34 @@
+# Requested official packages, plus the I226-V driver explicitly retained.
+luci-ssl
+luci-app-package-manager
+pbr
+luci-app-pbr
+ip-full
+ethtool
+tcpdump
+curl
+ca-bundle
+zerotier
+kmod-tun
+kmod-nft-tproxy
+kmod-nft-socket
+nlbwmon
+luci-app-nlbwmon
+ppp
+ppp-mod-pppoe
+luci-proto-ppp
+kmod-igc
+
+# OpenClash release APK and declared / firewall4 / legacy LuCI dependencies.
+luci-app-openclash
+dnsmasq-full
+bash
+ruby
+ruby-yaml
+unzip
+luci-compat
+kmod-inet-diag
+
+# Full variants replace conflicting small variants, preserving default config.
+-dnsmasq
+-ip-tiny

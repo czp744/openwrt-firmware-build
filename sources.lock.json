@@ -1,0 +1,37 @@
+{
+  "verified_at": "2026-10-22",
+  "openwrt": {
+    "version": "25.12.6",
+    "target": "x86/64",
+    "profile": "generic",
+    "base_url": "https://downloads.openwrt.org/releases/25.12.6/targets/x86/64/",
+    "imagebuilder": "openwrt-imagebuilder-25.12.6-x86-64.Linux-x86_64.tar.zst",
+    "sha256": "a792e29bd2233cda67a0823030bfb53c0b61fbb3836b2063e88adf89730d563b",
+    "profiles_sha256": "3bb642d27e71be7845aa0802e29fed5ff628da655da2e0656a0ae85b8c751272",
+    "kernel": "6.12.112",
+    "kernel_vermagic": "b4125196ecec75391093e1e2edeba490"
+  },
+  "openclash": {
+    "version": "0.48.002",
+    "release": "https://github.com/vernesong/OpenClash/releases/tag/v0.48.002",
+    "url": "https://github.com/vernesong/OpenClash/releases/download/v0.48.002/luci-app-openclash-0.48.002.apk",
+    "filename": "luci-app-openclash-0.48.002.apk",
+    "sha256": "f7ebbd43f9be15c5e6df26e5d0c03d50d0bb8f7fa4cc0d2c2bf048b08c0b155b",
+    "format": "OpenWrt APK; upstream built using snapshot SDK; compatibility must pass this stable ImageBuilder resolver",
+    "declared_dependencies": ["dnsmasq-full", "luci-compat", "bash", "curl", "ca-bundle", "ip-full", "ruby", "ruby-yaml", "kmod-tun", "unzip"],
+    "source_makefile": "https://raw.githubusercontent.com/vernesong/OpenClash/v0.48.002/luci-app-openclash/Makefile"
+  },
+  "mihomo": {
+    "version": "1.19.33",
+    "release": "https://github.com/MetaCubeX/mihomo/releases/tag/v1.19.33",
+    "url": "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.33/mihomo-linux-amd64-v1-v1.19.33.gz",
+    "filename": "mihomo-linux-amd64-v1-v1.19.33.gz",
+    "sha256": "8ec92e7b2fdc6b853ba00156bab7e4e965c8b0d843b8c4ac8ab98795f02ad524",
+    "format": "gzip-compressed Linux x86-64 executable, not APK",
+    "installed_path": "/etc/openclash/core/clash_meta"
+  },
+  "actions": {
+    "checkout": "actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+    "upload_artifact": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02"
+  }
+}
