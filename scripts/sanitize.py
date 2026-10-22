@@ -21,6 +21,9 @@ if stage == "pre":
     # inspection, then make OpenClash's build-time post-install a no-op.
     # Official packages retain their original maintainer scripts.
     scripts = root / "lib/apk/db/scripts.tar"
+    if not scripts.is_file():
+        scripts = scripts.with_name("scripts.tar.gz")
+    assert scripts.is_file(), "APK maintainer script archive missing"
     compressed = scripts.read_bytes().startswith(b"\x1f\x8b")
     buf = io.BytesIO()
     seen = []
