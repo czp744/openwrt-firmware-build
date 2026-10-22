@@ -26,7 +26,13 @@ def digest(path):
 
 
 def run(args):
-    return subprocess.check_output([str(a) for a in args], stderr=subprocess.STDOUT)
+    result = subprocess.run([str(a) for a in args], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.stderr:
+        print(result.stderr.decode(errors="replace"), flush=True)
+    if result.returncode:
+        print(result.stdout[-8000:].decode(errors="replace"), flush=True)
+        result.check_returncode()
+    return result.stdout
 
 
 query = run([ib / "staging_dir/host/bin/apk", "--root", root, "--no-network",
@@ -157,9 +163,12 @@ def inspect(source):
         ext4 = file.read(2)
     if "squashfs" in source.name:
         assert magic == b"hsqs"
-        extracted = folder / "root"
-        run(["unsquashfs", "-no-progress", "-d", extracted, rootimage])
-        actual = {path: digest(extracted / path) for path in sample_paths}
+        # Read each sample directly, without trying to recreate device nodes,
+        # ownership or special filesystem metadata as an unprivileged runner.
+        actual = {}
+        for path in sample_paths:
+            payload = run(["unsquashfs", "-cat", rootimage, path])
+            actual[path] = hashlib.sha256(payload).hexdigest()
     else:
         assert ext4 == b"\x53\xef"
         actual = {}
