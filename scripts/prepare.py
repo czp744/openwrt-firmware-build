@@ -63,6 +63,12 @@ assert text.count(needle) == 1
 text = text.replace(needle,
     '\tpython3 "$$ROOT/scripts/sanitize.py" pre "$(TARGET_DIR)"\n' + needle +
     '\tpython3 "$$ROOT/scripts/sanitize.py" post "$(TARGET_DIR)"\n')
+# 25.12.6 FormatPackages otherwise retains pkg_ver from the previous item when
+# a version-pinned requested package is followed by an unversioned default.
+# Reset that temporary variable on each iteration; retain every official default.
+needle = '  $(eval pkg_name:=$(firstword $(subst =, ,$(pkg))))\n'
+assert text.count(needle) == 1
+text = text.replace(needle, needle + '  $(eval pkg_ver:=)\n')
 makefile.write_text(text)
 # Do not source the third-party init script on the build host. It is shipped
 # intact in the image; the service has no boot symlink and enable remains zero.

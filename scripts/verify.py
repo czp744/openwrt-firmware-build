@@ -129,7 +129,13 @@ def inspect(source):
             partitions.append({"number": i + 1, "type": str(uuid.UUID(bytes_le=entry[:16])), "start": start, "end": end})
         boot = next(p for p in partitions if p["number"] == 1)
         rootpart = next(p for p in partitions if p["number"] == 2)
-        assert boot["type"] == "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
+        # OpenWrt's gen_image_generic.sh defaults to MBR type 0x83, which
+        # ptgen maps to Linux filesystem GUID even for the FAT EFI boot volume.
+        # Validate the actual FAT volume and x86-64 EFI executable below.
+        assert boot["type"] in {
+            "c12a7328-f81f-11d2-ba4b-00a0c93ec93b",
+            "0fc63daf-8483-4772-8e79-3d69d8477de4",
+        }, f"Unexpected boot partition type: {boot['type']}"
         disk.seek(rootpart["start"] * 512)
         rootimage = folder / "rootfs.img"
         remaining = (rootpart["end"] - rootpart["start"] + 1) * 512

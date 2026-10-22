@@ -10,6 +10,8 @@ OpenClash、PBR 和 ZeroTier 默认不启动。没有节点、订阅、用户密
 
 工作流仅手动触发，不发布 GitHub Release、不部署或刷机。权限只有 `contents: read`，checkout 不保存凭证，Actions 固定至提交 SHA。下载仅使用官方 OpenWrt 与两个项目的上游 GitHub 发布，并在解包前对照固定 SHA256。ImageBuilder 的 APK 安装使用 `--no-scripts`；OpenClash 的安装脚本被记录，构建阶段的 post-install 设为 no-op，且不在构建主机加载其 init 脚本。其他官方包按官方 ImageBuilder 处理；OpenClash 运行文件保留。
 
+构建脚本对 25.12.6 ImageBuilder 的包版本格式化循环加入变量重置，修复同时使用完整版本锁定和默认包时版本串被错误沿用的问题。此修正不删除默认包，修改后的 Makefile 随构建记录保存。
+
 成功产物为 `openwrt-25.12.6-x86-64-uefi` artifact：
 
 - `*generic-ext4-combined-efi.img.gz` 与 `*generic-squashfs-combined-efi.img.gz`。
